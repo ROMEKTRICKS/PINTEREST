@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pintrest - Search & Download</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: white;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        header h2 {
+            font-size: 24px;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 35px auto;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        section h2 {
+            font-size: 22px;
+            color: black;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .search-form, .download-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-form input, .download-form input {
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-form button, .download-form button {
+            padding: 12px;
+            border-radius: 20px;
+            border: none;
+            background: linear-gradient(145deg, #d90429, #9b2226);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-form button:hover, .download-form button:hover {
+            background: linear-gradient(145deg, #9b2226, #d90429);
+        }
+
+        #results-container, #download-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-top: 20px;
+            padding-bottom: 10px;
+        }
+
+        #results, #download-results {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            width: 120px;
+            text-align: center;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .download-btn {
+            padding: 8px 12px;
+            background-color: #d90429;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .download-btn:hover {
+            background-color: #9b2226;
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 15px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #ddd;
+        }
+
+        .footer-icons a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: black;
+            font-size: 24px;
+            transition: 0.3s;
+        }
+
+        .footer-icons a:hover {
+            color: #d90429;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>pintrest XD</h2>
+    </header>
+
+    <section>
+        <h2>Search on Pinterest</h2>
+        <form class="search-form" onsubmit="event.preventDefault(); searchPinterest();">
+            <input type="text" id="searchInput" placeholder="Search for something...">
+            <button type="submit">Search</button>
+        </form>
+    </section>
+
+    <div id="results-container">
+        <div id="results"></div>
+    </div>
+
+    <section>
+        <h2>Download from Pinterest</h2>
+        <form class="download-form" onsubmit="event.preventDefault(); downloadPinterest();">
+            <input type="text" id="downloadInput" placeholder="Enter Pinterest URL...">
+            <button type="submit">Download</button>
+        </form>
+    </section>
+
+    <div id="download-container">
+        <div id="download-results"></div>
+    </div>
+
+<footer>
+	
+    <p>Made by <b>ROMEK-XD</b></p>
+    
+    
+    <div class="footer-icons">
+        <a href="https://whatsapp.com/channel/0029VakaPzeD38CV78dbGf0e" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" width="30">
+        </a>
+        <a href="https://www.youtube.com/ROMEK-XD9" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" width="30">
+        </a>
+        <a href="https://t.me/ROMEKTRICKS" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram" width="30">
+        </a>
+        <a href="https://github.com/ROMEKTRICKS" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733553.png" alt="GitHub" width="30">
+        </a>
+    </div>
+</footer>
+
+    <script>
+        async function searchPinterest() {
+            const query = document.getElementById("searchInput").value;
+            if (!query) {
+                alert("Please enter a search keyword!");
+                return;
+            }
+
+            const url = `https://api.athar.web.id/api/pinterest/search?query=${query}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (!data.status || data.result.pins.length === 0) {
+                    document.getElementById("results").innerHTML = "<p>No images found.</p>";
+                    return;
+                }
+
+                const results = document.getElementById("results");
+                results.innerHTML = "";
+
+                data.result.pins.forEach(pin => {
+                    results.innerHTML += `
+                        <div class="card">
+                            <a href="${pin.pin_url}" target="_blank">
+                                <img src="${pin.media.images.medium.url}" alt="Pinterest Image">
+                            </a>
+                            <p>${pin.uploader.full_name}</p>
+                        </div>`;
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        async function downloadPinterest() {
+            const url = document.getElementById("downloadInput").value;
+            if (!url) {
+                alert("Please enter a Pinterest URL!");
+                return;
+            }
+
+            const apiUrl = `https://api.athar.web.id/api/pinterest?url=${url}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (!data.status || data.result.media_urls.length === 0) {
+                    document.getElementById("download-results").innerHTML = "<p>No media found.</p>";
+                    return;
+                }
+
+                const results = document.getElementById("download-results");
+                results.innerHTML = "";
+
+                data.result.media_urls.forEach(media => {
+                    results.innerHTML += `
+                        <div class="card">
+                            <img src="${media.url}" alt="Pinterest Media">
+                            <button class="download-btn" onclick="window.open('${media.url}', '_blank')">Download</button>
+                        </div>`;
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+    </script>
+
+</body>
+</html>
